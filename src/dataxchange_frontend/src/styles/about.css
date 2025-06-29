@@ -1,0 +1,48 @@
+.about-container {
+  padding: 60px 20px;
+  background: linear-gradient(to bottom, #ffffff, #f3f4f6);
+  color: #1a202c;
+}
+
+.about-hero {
+  text-align: center;
+  margin-bottom: 40px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.about-hero h1 {
+  font-size: 2.5rem;
+  color: #0070f3;
+}
+
+.about-hero p {
+  font-size: 1.2rem;
+  color: #555;
+  margin-top: 10px;
+}
+
+.about-section {
+  max-width: 800px;
+  margin: 0 auto 40px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  animation: slideUp 0.5s ease-in-out;
+}
+
+.about-section h2 {
+  color: #0070f3;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}

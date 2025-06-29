@@ -1,31 +1,47 @@
-import { useState } from 'react';
-import { dataxchange_backend } from 'declarations/dataxchange_backend';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 
-function App() {
-  const [greeting, setGreeting] = useState('');
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    const name = event.target.elements.name.value;
-    dataxchange_backend.greet(name).then((greeting) => {
-      setGreeting(greeting);
-    });
-    return false;
-  }
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
+import HomePage from './pages/HomePage';
+import ExplorePage from './pages/ExplorePage';
+import CategoriesPage from './pages/CategoriesPage';
+import ProvidersPage from './pages/ProvidersPage';
+import ProviderProfilePage from './pages/ProviderProfilePage';
+import BuyerDashboard from './pages/BuyerDashboard';
+import SellerDashboard from './pages/SellerDashboard';
+import UploadPage from './pages/UploadPage';
+import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
+
+export default function App() {
   return (
-    <main>
-      <img src="/logo2.svg" alt="DFINITY logo" />
-      <br />
-      <br />
-      <form action="#" onSubmit={handleSubmit}>
-        <label htmlFor="name">Enter your name: &nbsp;</label>
-        <input id="name" alt="Name" type="text" />
-        <button type="submit">Click Me!</button>
-      </form>
-      <section id="greeting">{greeting}</section>
-    </main>
+    
+      <main>
+        <div className="app-wrapper">
+          {/* <div style={{ backgroundColor: "green", color: "white" }}>It works!</div> */}
+
+          {/* <img src="/logo2.svg" alt="DataXchange logo" className="inline-block h-12" /> */}
+        <Navbar />
+        <div className="page-content">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/explore" element={<ExplorePage />} />
+            <Route path="/categories" element={<CategoriesPage />} />
+            <Route path="/providers" element={<ProvidersPage />} />
+            <Route path="/provider/:id" element={<ProviderProfilePage />} />
+            <Route path="/buyers" element={<BuyerDashboard />} />
+            {/* <Route path="/sellers" element={<SellerDashboard />} /> */}
+            <Route path="/upload" element={<UploadPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            {/* <Route path="/contact" element={<ContactPage />} /> */}
+          </Routes>
+        </div>
+          <Footer />
+        </div>
+      </main>
+  
   );
 }
-
-export default App;

@@ -1,0 +1,26 @@
+.explore-container {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.explore-heading {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #1a237e;
+  margin-bottom: 10px;
+}
+
+.explore-subtext {
+  text-align: center;
+  color: #555;
+  font-size: 1rem;
+  margin-bottom: 30px;
+}
+
+.explore-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
