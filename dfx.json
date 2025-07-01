@@ -1,14 +1,7 @@
 {
   "canisters": {
-    "dataxchange_backend": {
-      "candid": "src/dataxchange_backend/dataxchange_backend.did",
-      "package": "dataxchange_backend",
-      "type": "rust"
-    },
     "dataxchange_frontend": {
-      "dependencies": [
-        "dataxchange_backend"
-      ],
+      "dependencies": [],
       "source": [
         "src/dataxchange_frontend/dist"
       ],
@@ -25,7 +18,15 @@
       },
       "type": "custom",
       "wasm": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm.gz"
-    }
+    },
+  "data_marketplace_backend": {
+  "type": "rust",
+  "package": "data_marketplace_backend",
+  "main": "src/data_marketplace_backend/src/lib.rs",
+  "candid": "src/data_marketplace_backend/data_marketplace_backend.did"
+}
+
+
   },
   "defaults": {
     "build": {
