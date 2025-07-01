@@ -1,11 +1,12 @@
 // src/components/Navbar.jsx
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import '../styles/navbar.css'; // ✅ Import custom CSS
+import { AuthContext } from '../context/AuthContext';
+import '../styles/navbar.css'; 
 
 export default function Navbar() {
   const location = useLocation();
-
+  const { identity, login, logout } = useContext(AuthContext);
   const isActive = (path) => location.pathname === path;
 
   return (
@@ -34,6 +35,17 @@ export default function Navbar() {
             </li>
           ))}
         </ul>
+         <div className="auth-button">
+          {identity ? (
+            <button onClick={logout} className="btn">
+              Logout
+            </button>
+          ) : (
+            <button onClick={login} className="btn">
+              Login
+            </button>
+          )}
+        </div>
       </div>
     </nav>
   );
