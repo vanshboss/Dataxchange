@@ -1,5 +1,5 @@
 [workspace]
 members = [
-    "src/dataxchange_backend"
+    "src/data_marketplace_backend"
 ]
 resolver = "2"
