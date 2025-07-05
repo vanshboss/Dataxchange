@@ -1,6 +1,9 @@
 .about-container {
   padding: 60px 20px;
-  background: linear-gradient(to bottom, #ffffff, #f3f4f6);
+  max-width: 960px;
+  margin: auto;
+  font-family: 'Segoe UI', sans-serif;
+  line-height: 1.6;
   color: #1a202c;
 }
 
@@ -9,12 +12,11 @@
   margin-bottom: 40px;
   animation: fadeIn 1s ease-in-out;
 }
-
 .about-hero h1 {
-  font-size: 2.5rem;
-  color: #0070f3;
+  font-size: 3rem;
+  font-weight: bold;
+  color: #0044cc;
 }
-
 .about-hero p {
   font-size: 1.2rem;
   color: #555;
@@ -22,27 +24,105 @@
 }
 
 .about-section {
-  max-width: 800px;
-  margin: 0 auto 40px auto;
-  padding: 20px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-  animation: slideUp 0.5s ease-in-out;
+  background: #fff;
+  border-radius: 14px;
+  padding: 30px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  margin-bottom: 40px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .about-section h2 {
+  font-size: 1.6rem;
   color: #0070f3;
-  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+  border-left: 3px solid #0070f3;
+  margin-top: 16px;
+}
+.timeline-item {
+  position: relative;
+  padding-left: 10px;
+  font-weight: 500;
+}
+.timeline-item::before {
+  content: "•";
+  position: absolute;
+  left: -12px;
+  color: #0070f3;
+  font-size: 1.3em;
+}
+
+.team-cards {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.team-card {
+  width: 300px;
+  background: #f3f6ff;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.team-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+.team-card img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
   margin-bottom: 10px;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+.button-row {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+.external-button {
+  padding: 10px 24px;
+  background: linear-gradient(to right, #0070f3, #d3d5d9);
+  /* color: white; */
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.external-button:hover {
+  background: linear-gradient(to right, #c4cbda, #002266);
 }
 
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(40px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Dark mode enhancements */
+body.dark-mode .about-container {
+  color: #e6e6e6;
+}
+body.dark-mode .about-section {
+  background-color: #1f2937;
+  color: #ddd;
+  border: 1px solid #333;
+}
+body.dark-mode .timeline {
+  border-color: #58a6ff;
+}
+body.dark-mode .timeline-item::before {
+  color: #58a6ff;
+}
+body.dark-mode .team-card {
+  background-color: #2a2e38;
+}
+body.dark-mode .external-button {
+  background: linear-gradient(to right, #238636, #bcddc5);
+}
+body.dark-mode .external-button:hover {
+  background: linear-gradient(to right, #bdd9c5, #155f2a);
 }

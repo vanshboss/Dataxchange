@@ -1,0 +1,43 @@
+.admin-approval {
+  padding: 40px;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.pending-list {
+  list-style: none;
+  padding: 0;
+}
+
+.pending-item {
+  background: #f5f7fa;
+  border: 1px solid #ddd;
+  padding: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pending-item button {
+  background: #00e0c6;
+  border: none;
+  padding: 8px 12px;
+  color: white;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pending-item button:hover {
+  background: #00c2aa;
+}
+
+.error {
+  color: red;
+  margin: 10px 0;
+}
+
+.success {
+  color: green;
+  margin: 10px 0;
+}

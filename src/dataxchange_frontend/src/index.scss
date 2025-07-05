@@ -1,8 +1,18 @@
 body {
   font-family: sans-serif;
   font-size: 1.5rem;
+    margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9fafb;
+  color: #1f2937;
+}
+a {
+  text-decoration: none;
 }
 
+* {
+  box-sizing: border-box;
+}
 .app-wrapper {
   display: flex;
   flex-direction: column;
@@ -49,4 +59,99 @@ button[type="submit"] {
 
 .browser-warning {
   display: none;
+}
+.loading-screen {
+  padding: 2rem;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+
+body.dark-mode {
+  background-color: #0d1117;
+  color: #ffffff;
+}
+
+body.dark-mode .navbar {
+  background-color: #161b22;
+}
+
+body.dark-mode .navbar__links a {
+  color: #ffffff;
+}
+
+.theme-toggle {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  margin-right: 12px;
+  color: #fff;
+}
+
+
+
+/* ========== DARK MODE BASE ========== */
+body.dark-mode {
+  background-color: #15161c;
+  color: #b4a4a4;
+}
+
+/* Generic container styling */
+body.dark-mode .container,
+body.dark-mode .myuploads-container,
+body.dark-mode .dataset-detail-container,
+body.dark-mode .profile-container {
+  background-color: #161b22;
+  color: #262424;
+}
+
+/* Cards, sections */
+body.dark-mode .card,
+body.dark-mode .upload-item,
+body.dark-mode .step-card,
+body.dark-mode .about-section
+
+ {
+  background-color: #1f2937;
+  color: #eaeaea;
+  border-color: #333;
+}
+
+/* Buttons */
+body.dark-mode .cta-button,
+
+body.dark-mode .primary-cta {
+  background-color: #121369;
+  color: white;
+  border: none;
+}
+
+
+
+/* Links */
+body.dark-mode a {
+  color: #dae6f3;
+}
+
+body.dark-mode a:hover {
+  color: #c7ddf0;
+}
+
+/* Text inputs */
+body.dark-mode input,
+body.dark-mode textarea {
+  background-color: #21262d;
+  color: #eee;
+  border: 1px solid #30363d;
+}
+
+body,
+.container,
+.card,
+button,
+input,
+textarea {
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

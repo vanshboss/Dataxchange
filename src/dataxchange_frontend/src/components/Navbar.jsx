@@ -1,51 +1,70 @@
 // src/components/Navbar.jsx
-import React, { useContext } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-import '../styles/navbar.css'; 
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
+import "../styles/navbar.css";
 
 export default function Navbar() {
-  const location = useLocation();
-  const { identity, login, logout } = useContext(AuthContext);
-  const isActive = (path) => location.pathname === path;
+  const { iiPrincipal, loginII, logout, loading } = useContext(UserContext);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+const [dark, setDark] = useState(false);
+
+ const toggleTheme = () => {
+    setDark((prev) => {
+      const next = !prev;
+      document.body.classList.toggle("dark-mode", next);
+      return next;
+    });
+  };
+
+
+  if (loading) return null;
+
+  const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
+  const handleNavigate = (path) => {
+    setDropdownOpen(false);
+    navigate(path);
+  };
 
   return (
     <nav className="navbar">
-      <div className="navbar-container">
-        <div className="logo">DataXchange</div>
-        <ul className="nav-links">
-          {[
-            { name: 'Home', path: '/' },
-            { name: 'About', path: '/about' },
-            { name: 'Explore', path: '/explore' },
-            { name: 'Categories', path: '/categories' },
-            { name: 'Providers', path: '/providers' },
-            { name: 'Upload', path: '/upload' },
-            { name: 'Buyer', path: '/buyers' },
-            // { name: 'Seller', path: '/sellers' },
-            // { name: 'Contact', path: '/contact' },
-          ].map(({ name, path }) => (
-            <li key={path}>
-              <Link
-                to={path}
-                className={`nav-link ${isActive(path) ? 'active' : ''}`}
-              >
-                {name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-         <div className="auth-button">
-          {identity ? (
-            <button onClick={logout} className="btn">
-              Logout
-            </button>
-          ) : (
-            <button onClick={login} className="btn">
-              Login
-            </button>
-          )}
+      <div className="navbar__logo" onClick={() => navigate("/")}>
+        <div className="navbar__logo-circle">
+        <img src="/public/logo1.png" alt="Logo" className="navbar__img" />
         </div>
+        <span>DataXchange</span>
+      </div>
+
+      <ul className="navbar__links">
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/about">About</Link></li>
+        {iiPrincipal && <li><Link to="/explore">Explore</Link></li>}
+        {iiPrincipal && <li><Link to="/upload">Upload</Link></li>}
+      </ul>
+
+      <div className="navbar__actions">
+           <button className="theme-toggle" onClick={toggleTheme}>
+      {dark ? "🌞" : "🌙"}
+    </button>
+        {!iiPrincipal ? (
+          <button onClick={loginII} className="navbar__btn">Login</button>
+        ) : (
+          <div className="profile-dropdown">
+            <button className="navbar__btn profile-btn" onClick={toggleDropdown}>
+              👤 ▾
+            </button>
+            {dropdownOpen && (
+              <div className="dropdown-menu">
+                <button onClick={() => handleNavigate("/profile")}>👤 View Profile</button>
+                <button onClick={() => handleNavigate("/myuploads")}>📦 My Uploads</button>
+                <button onClick={() => handleNavigate("/myrequests")}>📥 My Requests</button>
+                <hr />
+                <button onClick={logout} className="logout-btn">🚪 Logout</button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </nav>
   );

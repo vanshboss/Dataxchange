@@ -1,42 +1,54 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-
-
-import Navbar from './components/Navbar';
+import React, { useContext } from "react";
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { UserContext } from "./context/UserContext";
+import RequireAuth from "./routes/RequireAuth";
+import LandingPage from "./pages/LandingPage";
+import Navbar from "./components/Navbar";
 import Footer from './components/Footer';
+import MyRequestsPage from "./pages/MyRequestsPage";
 
-import HomePage from './pages/HomePage';
+import MyUploadsPage from './pages/MyUploadsPage';
 import ExplorePage from './pages/ExplorePage';
-import CategoriesPage from './pages/CategoriesPage';
-import ProvidersPage from './pages/ProvidersPage';
-import ProviderProfilePage from './pages/ProviderProfilePage';
-import BuyerDashboard from './pages/BuyerDashboard';
-import SellerDashboard from './pages/SellerDashboard';
+
+import DatasetDetailPage from "./pages/DatasetDetailPage";
+import ProfilePage from "./pages/ProfilePage";
+
+import AdminApprovalPage from "./pages/AdminApprovalPage";
+
 import UploadPage from './pages/UploadPage';
 import AboutPage from './pages/AboutPage';
-import ContactPage from './pages/ContactPage';
+
 
 export default function App() {
+
+const { loading } = useContext(UserContext);
+  if (loading) return <div className="loading-screen">Checking session...</div>;
+
+  
+
   return (
     
       <main>
         <div className="app-wrapper">
-          {/* <div style={{ backgroundColor: "green", color: "white" }}>It works!</div> */}
-
-          {/* <img src="/logo2.svg" alt="DataXchange logo" className="inline-block h-12" /> */}
+          
         <Navbar />
         <div className="page-content">
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/explore" element={<ExplorePage />} />
-            <Route path="/categories" element={<CategoriesPage />} />
-            <Route path="/providers" element={<ProvidersPage />} />
-            <Route path="/provider/:id" element={<ProviderProfilePage />} />
-            <Route path="/buyers" element={<BuyerDashboard />} />
-            {/* <Route path="/sellers" element={<SellerDashboard />} /> */}
-            <Route path="/upload" element={<UploadPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            {/* <Route path="/contact" element={<ContactPage />} /> */}
+           <Route path="/" element={<LandingPage />} />
+        <Route path="/about" element={<AboutPage />} />
+
+        {/* Protected routes*/}
+        <Route path="/profile" element={<RequireAuth><ProfilePage /></RequireAuth>} />
+        <Route path="/myuploads" element={<RequireAuth><MyUploadsPage /></RequireAuth>} />
+        <Route path="/myrequests" element={<RequireAuth><MyRequestsPage /></RequireAuth>} />
+
+        <Route path="/explore" element={<RequireAuth><ExplorePage /></RequireAuth>} />
+        <Route path="/upload" element={<RequireAuth><UploadPage /></RequireAuth>} />
+        <Route path="/dataset/:id" element={<RequireAuth><DatasetDetailPage /></RequireAuth>} />
+        <Route path="/admin/requests/:id" element={<RequireAuth><AdminApprovalPage /></RequireAuth>} />
+      
+        <Route path="/profile" element={<RequireAuth><ProfilePage /></RequireAuth>} />
+
           </Routes>
         </div>
           <Footer />
