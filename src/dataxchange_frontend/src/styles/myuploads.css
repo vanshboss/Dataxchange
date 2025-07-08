@@ -1,0 +1,80 @@
+/* src/styles/myuploads.css */
+.myuploads-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.myuploads-list {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.myupload-card {
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.myupload-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.myupload-card p {
+  margin: 4px 0;
+  font-size: 0.9rem;
+}
+
+.myupload-card button {
+  margin-top: 10px;
+  background: #2200e0a6;
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  font-weight: 500;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.myupload-card button:hover {
+  background: #00c8b0;
+}
+.myuploads-container {
+  padding: 40px;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.upload-list {
+  list-style: none;
+  padding: 0;
+}
+
+.upload-item {
+  background: #f7f9fc;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.manage-link {
+  background-color: #9343f5;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.manage-link:hover {
+  background-color: #8d6ada;
+}
