@@ -1,6 +1,6 @@
 // src/services/backend.js
 import { Actor, HttpAgent } from "@dfinity/agent";
-import { idlFactory, canisterId } from "../declarations/data_marketplace_backend";
+import { idlFactory, canisterId } from "../../../declarations/data_marketplace_backend";
 import { getAuthClient } from "./iiAuth";
 
 // Environment-specific configuration

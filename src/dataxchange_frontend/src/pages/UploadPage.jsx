@@ -24,7 +24,7 @@ export default function UploadPage() {
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   ];
 
-  const isValidWallet = (addr) => /^[A-Za-z0-9]{25}$/.test(addr);
+  const isValidWallet = (addr) => /^[A-Za-z0-9]{25,64}$/.test(addr);
 
   useEffect(() => {
     if (!loading && !iiPrincipal) {

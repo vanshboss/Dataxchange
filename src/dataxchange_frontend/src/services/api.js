@@ -75,3 +75,24 @@ export async function hasAccess(id) {
   const actor = await getBackendActor();
   return await actor.has_access(BigInt(id));
 }
+
+/**
+ * Gets a list of all datasets the current user has requested.
+ * @returns {Promise<Array<{ dataset_id: number, title: string, status: string }>>}
+ */
+export async function getMyRequests() {
+  try {
+    const actor = await getBackendActor();
+    const requests = await actor.get_my_requests();
+    
+    // Map the requests to a more usable format
+    return requests.map((req) => ({
+      dataset_id: Number(req.dataset_id),
+      title: req.title,
+      status: Object.keys(req.status)[0],
+    }));
+  } catch (err) {
+    console.error("Error fetching my requests:", err);
+    throw err;
+  }
+}

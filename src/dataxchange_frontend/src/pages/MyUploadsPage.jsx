@@ -5,6 +5,11 @@ import { UserContext } from "../context/UserContext";
 import { Link } from "react-router-dom";
 import "../styles/myuploads.css";
 
+const shortenPrincipal = (principal) => {
+  const text = principal.toText();
+  if (text.length <= 10) return text;
+  return `${text.substring(0, 5)}...${text.substring(text.length - 4)}`;
+};
 export default function MyUploadsPage() {
   const { iiPrincipal, loading } = useContext(UserContext);
   const [uploads, setUploads] = useState([]);
@@ -36,7 +41,8 @@ console.group("🔍 MyUploads DEBUG");
           category,
           price: Number(price),
           wallet,
-          owner: owner.toText?.() || owner.toString?.() || String(owner),
+          // owner: owner.toText?.() || owner.toString?.() || String(owner),
+          owner: shortenPrincipal(owner)
           }))
         );
       } catch (err) {

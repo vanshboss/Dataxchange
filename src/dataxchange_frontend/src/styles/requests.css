@@ -1,197 +1,89 @@
-.admin-approval {
-  padding: 40px;
-  font-family: "Segoe UI", sans-serif;
-  box-sizing: border-box;
-  color: #1e293b;
-  background-color: #ffffff;
-  transition: background-color 0.4s ease, color 0.4s ease;
-  perspective: 1000px;
+/* src/styles/myrequests.css */
+.requests-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
-.pending-list {
+.requests-container h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #004085;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.requests-list {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 1rem;
 }
 
-.pending-item {
-  background: #f5f7fa;
-  border: 1px solid #ddd;
-  padding: 18px 24px;
+.request-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-radius: 12px;
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.06),
-    0 5px 10px rgba(0, 0, 0, 0.04);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 0.3s ease,
-    background-color 0.3s ease;
-  will-change: transform, box-shadow;
-  cursor: default;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 5px solid;
 }
 
-.pending-item:hover,
-.pending-item:focus-within {
-  transform: translateY(-4px) rotateX(3deg);
-  border-color: #00e0c6;
-  box-shadow:
-    0 12px 20px rgba(0, 224, 198, 0.35),
-    0 6px 12px rgba(0, 224, 198, 0.2);
-  background-color: #d5f7f0;
+.request-item.status-pending {
+  border-color: #ffc107;
 }
 
-.pending-item:focus-visible {
-  outline: none;
-  box-shadow:
-    0 12px 24px rgba(0, 224, 198, 0.5),
-    0 8px 20px rgba(0, 224, 198, 0.3);
+.request-item.status-approved {
+  border-color: #28a745;
 }
 
-.pending-item button {
-  background: #00e0c6;
+.request-item.status-rejected {
+  border-color: #dc3545;
+}
+
+.request-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.request-details strong {
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.request-status {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-top: 0.25rem;
+}
+
+.download-btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: #007bff;
   border: none;
-  padding: 10px 18px;
-  color: white;
-  font-weight: 700;
-  border-radius: 10px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 1.05rem;
-  letter-spacing: 0.03em;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
-  user-select: none;
-  box-shadow:
-    0 6px 15px rgba(0, 224, 198, 0.5),
-    inset 0 -3px 5px rgba(0, 195, 185, 0.6);
-  will-change: background-color, box-shadow, transform;
-  transform-style: preserve-3d;
-  text-shadow: 0 0 4px rgba(0, 255, 230, 0.45);
+  transition: background-color 0.2s ease-in-out;
 }
 
-.pending-item button:hover,
-.pending-item button:focus-visible {
-  background: #00c2aa;
-  box-shadow:
-    0 8px 20px rgba(0, 194, 170, 0.85),
-    inset 0 -4px 8px rgba(0, 170, 150, 0.8);
-  outline: none;
-  transform: translateZ(4px) scale(1.05);
-  text-shadow: 0 0 6px rgba(0, 255, 230, 0.7);
+.download-btn:hover {
+  background-color: #0056b3;
 }
 
-.error {
-  color: #dc2626;
-  margin: 10px 0;
-  font-weight: 700;
+.loading-message, .no-requests, .status-msg {
   text-align: center;
-  user-select: text;
-  filter: drop-shadow(0 0 3px rgba(220, 38, 38, 0.7));
-  animation: pulse-red 2.5s ease-in-out infinite;
+  font-size: 1.2rem;
+  color: #6c757d;
+  padding: 2rem;
 }
 
-.success {
-  color: #16a34a;
-  margin: 10px 0;
-  font-weight: 700;
-  text-align: center;
-  user-select: text;
-  filter: drop-shadow(0 0 4px rgba(22, 163, 74, 0.8));
-  animation: pulse-green 2.5s ease-in-out infinite;
-}
-
-/* Dark mode support */
-body.dark-mode {
-  background-color: #111827;
-  color: #d1d5db;
-}
-body.dark-mode .admin-approval {
-  background-color: #1f2937;
-  color: #d1d5db;
-}
-body.dark-mode .pending-item {
-  background: #273449;
-  border-color: #475569;
-  box-shadow:
-    0 1px 6px rgba(59, 130, 246, 0.2);
-  color: #cbd5e1;
-}
-body.dark-mode .pending-item:hover,
-body.dark-mode .pending-item:focus-within {
-  border-color: #14b8a6;
-  background-color: #0f766e;
-  transform: translateY(-4px) rotateX(3deg);
-  box-shadow:
-    0 12px 20px rgba(20, 184, 166, 0.6),
-    0 6px 12px rgba(20, 184, 166, 0.3);
-}
-body.dark-mode .pending-item:focus-visible {
-  box-shadow:
-    0 12px 24px rgba(20, 184, 166, 0.9),
-    0 8px 20px rgba(20, 184, 166, 0.5);
-  outline: none;
-}
-body.dark-mode .pending-item button {
-  background: #14b8a6;
-  box-shadow:
-    0 6px 15px rgba(20, 184, 166, 0.7),
-    inset 0 -3px 5px rgba(20, 170, 160, 0.7);
-  color: #e0e7ff;
-  text-shadow: 0 0 4px #2dd4bf;
-}
-body.dark-mode .pending-item button:hover,
-body.dark-mode .pending-item button:focus-visible {
-  background: #0f766e;
-  box-shadow:
-    0 8px 20px rgba(15, 118, 110, 0.9),
-    inset 0 -4px 8px rgba(15, 110, 95, 0.85);
-  transform: translateZ(4px) scale(1.05);
-  outline: none;
-  text-shadow: 0 0 6px #22d3ee;
-}
-body.dark-mode .error {
-  color: #f87171;
-  filter: drop-shadow(0 0 4px rgba(248, 113, 113, 0.9));
-  animation: pulse-red 2.5s ease-in-out infinite;
-}
-body.dark-mode .success {
-  color: #4ade80;
-  filter: drop-shadow(0 0 5px rgba(74, 222, 128, 0.95));
-  animation: pulse-green 2.5s ease-in-out infinite;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-  .pending-item {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 14px;
-  }
-  .pending-item button {
-    width: 100%;
-    padding: 14px 0;
-    font-size: 1.1rem;
-  }
-}
-
-/* Animations */
-@keyframes pulse-red {
-  0%, 100% {
-    filter: drop-shadow(0 0 3px rgba(220, 38, 38, 0.7));
-  }
-  50% {
-    filter: drop-shadow(0 0 10px rgba(220, 38, 38, 1));
-  }
-}
-@keyframes pulse-green {
-  0%, 100% {
-    filter: drop-shadow(0 0 4px rgba(22, 163, 74, 0.8));
-  }
-  50% {
-    filter: drop-shadow(0 0 12px rgba(22, 163, 74, 1));
-  }
+.status-msg.error {
+  color: #dc3545;
 }

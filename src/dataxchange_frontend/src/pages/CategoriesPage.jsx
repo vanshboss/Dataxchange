@@ -66,7 +66,7 @@ export default function CategoriesPage() {
         <button className="back-btn" onClick={() => navigate(-1)}>
           ← Back
         </button>
-        <h2 className="categories-title">📁 Category: {cat}</h2>
+        <h3 className="categories-title">📁 Category: {cat}</h3>
       </div>
       
       <select value={cat} onChange={handleChange} className="category-dropdown">

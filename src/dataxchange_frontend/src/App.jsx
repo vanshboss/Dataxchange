@@ -19,6 +19,8 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
 import { AnimatePresence } from "framer-motion";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function App() {
   const { loading } = useContext(UserContext);
@@ -49,8 +51,10 @@ export default function App() {
               {/* Default redirect */}
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
+            <ToastContainer position="top-right" autoClose={4000} />
           </AnimatePresence>
         </div>
+      
         <Footer />
       </div>
     </main>

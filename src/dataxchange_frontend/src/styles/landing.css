@@ -367,7 +367,7 @@ body.dark-mode .how-it-works,
 body.dark-mode .testimonials,
 body.dark-mode .faq,
 body.dark-mode .cta {
-  background: #1a1a2e;
+  background: linear-gradient(135deg, #1c192c, #192f21);
   box-shadow: none;
   color: #ddd;
 }

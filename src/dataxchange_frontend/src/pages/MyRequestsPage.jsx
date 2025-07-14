@@ -1,86 +1,85 @@
+// src/pages/MyRequestsPage.jsx
 import React, { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom"; // Import useParams
-import { getBackendActor } from "../services/backend";
-import { getDatasetById, getPendingRequests, approveBuyer } from "../services/api"; // Import functions
 import { UserContext } from "../context/UserContext";
+import { getMyRequests, viewDataset } from "../services/api";
+import { useNavigate } from "react-router-dom";
 import "../styles/requests.css";
+import { toast } from "react-toastify";
 
 export default function MyRequestsPage() {
-  const { id } = useParams(); // Get the dataset ID from the URL
   const { iiPrincipal, loading } = useContext(UserContext);
-  const [dataset, setDataset] = useState(null);
-  const [pendingRequests, setPendingRequests] = useState([]);
-  const [statusMsg, setStatusMsg] = useState("");
-
+  const navigate = useNavigate();
+  const [requests, setRequests] = useState([]);
+  const [statusMsg, setStatusMsg] = useState(null);
+const handleBack = () => {
+  navigate(-1); 
+};
   useEffect(() => {
-    if (!id || loading) return;
-
-    const loadRequests = async () => {
+    const fetchRequests = async () => {
+      if (!iiPrincipal) return;
       try {
-        const ds = await getDatasetById(Number(id));
-        if (!ds) {
-          setStatusMsg("❌ Dataset not found.");
-          return;
+        const reqs = await getMyRequests();
+        const approvedNow = reqs.filter(r => r.status?.Approved !== undefined);
+        if (approvedNow.length > 0) {
+          toast.success("🎉 You have approved datasets ready to download!");
         }
-
-        // Check if the current user is the owner of this dataset
-        if (ds.owner !== iiPrincipal) {
-          setStatusMsg("🔒 Access Denied: You do not own this dataset.");
-          return;
-        }
-
-        setDataset(ds);
-        const reqs = await getPendingRequests(Number(id));
-        setPendingRequests(reqs);
-
+        setRequests(reqs);
       } catch (err) {
-        console.error("Error loading requests:", err);
-        setStatusMsg("❌ Failed to load requests.");
+        console.error("Failed to load requests:", err);
+        toast.error("❌ Failed to fetch your access requests");
+        setStatusMsg("Failed to load your requests.");
+
       }
     };
+    fetchRequests();
+  }, [iiPrincipal, loading]);
 
-    loadRequests();
-  }, [id, iiPrincipal, loading]);
-
-  const handleApprove = async (buyer) => {
+  const handleDownload = async (id, title) => {
     try {
-      const res = await approveBuyer(dataset.id, buyer);
-      setStatusMsg(`✅ ${res}`);
-
-      // Optimistically update UI
-      setPendingRequests((prev) => prev.filter((p) => p !== buyer));
-    } catch (e) {
-      console.error("Approval error:", e);
-      setStatusMsg("❌ Approval failed.");
+      const bytes = await viewDataset(id);
+      const blob = new Blob([bytes], { type: "application/octet-stream" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${title}.bin`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Download failed:", err);
+      setStatusMsg("Download failed. You may not have access to this file.");
     }
   };
-  
-  // Helper to shorten the principal for display
-  const shortenPrincipal = (principal) => {
-    return `${principal.slice(0, 4)}...${principal.slice(-4)}`;
-  };
 
-  if (loading || !dataset) return <p className="loading">⏳ Loading...</p>;
-  if (!iiPrincipal) return <p>🔒 Please log in to view access requests.</p>;
+  if (loading) return <p className="loading-message">⏳ Loading...</p>;
+  if (!iiPrincipal) return <p>Please log in to view your requests.</p>;
 
   return (
     <div className="requests-container">
-      <h2>📥 Pending Requests for: {dataset.title}</h2>
-      {statusMsg && <p className="status-msg">{statusMsg}</p>}
+      <button className="back-button" onClick={handleBack}>← Back</button>
+      <h3>📬 My Requests</h3>
+      {statusMsg && <p className="status-msg error">{statusMsg}</p>}
       
-      {pendingRequests.length ? (
-        <ul>
-          {pendingRequests.map((p, idx) => (
-            <li key={idx}>
-              <code>{shortenPrincipal(p)}</code>
-              <button onClick={() => handleApprove(p)}>
-                ✅ Approve
-              </button>
+      {!requests.length ? (
+        <p className="no-requests">You have no pending or approved requests.</p>
+      ) : (
+        <ul className="requests-list">
+          {requests.map((req) => (
+            <li key={req.dataset_id} className={`request-item status-${req.status.toLowerCase()}`}>
+              <div className="request-details">
+                <strong>{req.title}</strong>
+                <span className="request-status">{req.status}</span>
+              </div>
+              {req.status === "Approved" && (
+                <button 
+                  onClick={() => handleDownload(req.dataset_id, req.title)} 
+                  className="download-btn"
+                >
+                  Download
+                </button>
+              )}
             </li>
           ))}
         </ul>
-      ) : (
-        <p className="no-requests">No pending requests.</p>
       )}
     </div>
   );

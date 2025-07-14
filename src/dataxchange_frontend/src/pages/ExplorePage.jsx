@@ -33,7 +33,7 @@ export default function ExplorePage() {
 
   return (
     <div className="explore-container">
-      <h1 className="explore-heading">📊 Explore Datasets</h1>
+      <h3 className="explore-heading">📊 Explore Datasets</h3>
       <p className="explore-subtext">Browse trending and high-quality datasets submitted by data providers.</p>
 
       <input

@@ -5,6 +5,8 @@ import { getBackendActor } from "../services/backend";
 import "../styles/detail.css";
 import { shortenPrincipal } from "../utils/principal";
 import { hasAccess } from "../services/api";
+import { toast } from "react-toastify";
+
 export default function DatasetDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -60,8 +62,14 @@ const [hasDownloadAccess, setHasDownloadAccess] = useState(false);
       const actor = await getBackendActor();
       const res = await actor.request_access(BigInt(id));
       setMessage(res);
+      if (res.includes("submitted")) {
+      toast.info("✅ Request submitted. Awaiting approval.");
+    } else {
+      toast.warning(res); // fallback if any warning
+    }
     } catch (err) {
       setMessage("❌ Failed to request access.");
+      toast.error("❌ Failed to request access.");
       console.error(err);
     }
   };
@@ -72,11 +80,11 @@ const [hasDownloadAccess, setHasDownloadAccess] = useState(false);
       const res = await actor.view_dataset(BigInt(id));
 
       if ("Ok" in res) {
-        const blob = new Blob([new Uint8Array(res.Ok)], { type: "application/octet-stream" });
+        const blob = new Blob([new Uint8Array(res.Ok)], { type: "application/pdf" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `${dataset.title}.bin`;
+        a.download = `${dataset.title}.pdf`;
         a.click();
         URL.revokeObjectURL(url);
       } else {

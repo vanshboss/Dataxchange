@@ -202,7 +202,7 @@ body.dark-mode .upload-item {
 
 body.dark-mode .upload-item:hover,
 body.dark-mode .upload-item:focus-within {
-  background-color: #2563eb;
+  /* background-color: #2563eb; */
   border-color: #1e40af;
   color: #dbeafe;
 }
@@ -219,4 +219,8 @@ body.dark-mode .manage-link:focus-visible {
   background-color: #a78bfa;
   color: #1e293b;
   box-shadow: 0 0 10px #a78bfacc;
+}
+
+h3{
+  color: #1e40af;
 }
