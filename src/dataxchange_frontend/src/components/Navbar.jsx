@@ -1,6 +1,6 @@
 // src/components/Navbar.jsx
 import React, { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import "../styles/navbar.css";
 
@@ -31,16 +31,32 @@ const [dark, setDark] = useState(false);
     <nav className="navbar">
       <div className="navbar__logo" onClick={() => navigate("/")}>
         <div className="navbar__logo-circle">
-        <img src="/public/logo1.png" alt="Logo" className="navbar__img" />
+        <img src="/public/logo.svg" alt="Logo" className="navbar__img" />
         </div>
         <span>DataXchange</span>
       </div>
 
       <ul className="navbar__links">
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/about">About</Link></li>
-        {iiPrincipal && <li><Link to="/explore">Explore</Link></li>}
-        {iiPrincipal && <li><Link to="/upload">Upload</Link></li>}
+       <li>
+          <NavLink to="/" end className={({ isActive }) => isActive ? "active" : ""}>Home</NavLink>
+        </li>
+        <li>
+          <NavLink to="/about" className={({ isActive }) => isActive ? "active" : ""}>About</NavLink>
+        </li>
+        {iiPrincipal && (
+          <>
+            <li>
+              <NavLink to="/explore" className={({ isActive }) => isActive ? "active" : ""}>Explore</NavLink>
+            </li>
+            <li>
+              <NavLink to="/categories/All" className={({ isActive }) => isActive ? "active" : ""}>Categories</NavLink>
+            </li>
+            <li>
+              <NavLink to="/upload" className={({ isActive }) => isActive ? "active" : ""}>Upload</NavLink>
+            </li>
+            
+          </>
+        )}
       </ul>
 
       <div className="navbar__actions">

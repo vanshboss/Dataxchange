@@ -1,44 +1,57 @@
 import React, { createContext, useState, useEffect } from "react";
-import { initII, isAuthenticatedII, getIIPrincipal, loginII, logoutII } from "../services/iiAuth";
-
+// Import the initAuth and loginII functions from iiAuth.js
+import { initAuth, getAuthClient, loginII as iiLoginFunction } from "../services/iiAuth";
+import { useNavigate } from "react-router-dom";
 
 export const UserContext = createContext({});
 
 export function UserProvider({ children }) {
   const [iiPrincipal, setIIPrincipal] = useState(null);
+  const [authClient, setAuthClient] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-const [loading, setLoading] = useState(true);
   useEffect(() => {
-    initII().then(async () => {
-      if (await isAuthenticatedII()) {
-        setIIPrincipal(getIIPrincipal());
+    initAuth().then(async (client) => {
+      setAuthClient(client);
+      const isAuth = await client.isAuthenticated();
+      if (isAuth) {
+        const principal = client.getIdentity().getPrincipal().toText();
+        setIIPrincipal(principal);
       }
-      else{
-        setIIPrincipal(null);
-      }
-
-setLoading(false);
-    });// Auto logout on browser/tab close
-
+      setLoading(false);
+    });
   }, []);
 
-  const handleLoginII = async () => {
-    const pr = await loginII();
-    setIIPrincipal(pr);
-    return pr;
+  // Use the imported loginII function directly
+  // This will use the dynamic identityProviderUrl logic from iiAuth.js
+  const loginII = async () => {
+    if (!authClient) {
+      console.error("AuthClient not initialized.");
+      return;
+    }
+    // Call the loginII function from iiAuth.js, passing the onSuccess callback
+    await iiLoginFunction({
+      onSuccess: async () => {
+        const identity = authClient.getIdentity();
+        const principal = identity.getPrincipal().toText();
+        console.log("✅ Login successful:", principal);
+        setIIPrincipal(principal);
+        navigate("/explore");
+      },
+    });
   };
 
-
-const logout = async () => {
-  // Clear identity from auth client if needed (depends on your II setup)
-   await logoutII();
-  setIIPrincipal(null);
-  setPlugPrincipal(null);
-};
+  const logout = async () => {
+    if (authClient) {
+      await authClient.logout();
+      setIIPrincipal(null);
+      navigate("/");
+    }
+  };
 
   return (
-    <UserContext.Provider
-      value={{ iiPrincipal, loginII: handleLoginII, logout, loading }}>
+    <UserContext.Provider value={{ iiPrincipal, loginII, logout, loading }}>
       {children}
     </UserContext.Provider>
   );

@@ -51,7 +51,7 @@ const handleBack = () => {
   return (
     <div className="admin-approval">
         <button className="back-button" onClick={handleBack}>← Back</button>
-      <h1>🔐 Approve Buyers for Dataset #{id}</h1>
+      <h3>🔐 Approve Buyers for Dataset #{id}</h3>
 
       {error && <p className="error">{error}</p>}
       {message && <p className="success">{message}</p>}

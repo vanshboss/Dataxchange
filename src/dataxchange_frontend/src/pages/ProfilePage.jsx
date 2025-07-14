@@ -10,7 +10,7 @@ export default function ProfilePage() {
 
   return (
     <div className="profile-container">
-      <h1>👤 My Profile </h1>
+      <h3>👤 My Profile </h3>
 
       <div className="profile-info">
         <p><strong>Internet Identity:</strong></p>

@@ -1,82 +1,87 @@
-// src/pages/MyRequestsPage.jsx
 import React, { useEffect, useState, useContext } from "react";
+import { useParams } from "react-router-dom"; // Import useParams
 import { getBackendActor } from "../services/backend";
+import { getDatasetById, getPendingRequests, approveBuyer } from "../services/api"; // Import functions
 import { UserContext } from "../context/UserContext";
-import { Principal } from "@dfinity/principal";
 import "../styles/requests.css";
 
 export default function MyRequestsPage() {
+  const { id } = useParams(); // Get the dataset ID from the URL
   const { iiPrincipal, loading } = useContext(UserContext);
-  const [datasets, setDatasets] = useState([]);
-  const [requestsMap, setRequestsMap] = useState({});
+  const [dataset, setDataset] = useState(null);
+  const [pendingRequests, setPendingRequests] = useState([]);
   const [statusMsg, setStatusMsg] = useState("");
 
   useEffect(() => {
-    if (!iiPrincipal || loading) return;
+    if (!id || loading) return;
 
     const loadRequests = async () => {
-      const backend = getBackendActor();
+      try {
+        const ds = await getDatasetById(Number(id));
+        if (!ds) {
+          setStatusMsg("❌ Dataset not found.");
+          return;
+        }
 
-      const all = await backend.get_all_datasets();
-      const mine = all.filter(([id, title, price, wallet, owner]) =>
-        owner.toString() === iiPrincipal
-      );
+        // Check if the current user is the owner of this dataset
+        if (ds.owner !== iiPrincipal) {
+          setStatusMsg("🔒 Access Denied: You do not own this dataset.");
+          return;
+        }
 
-      const reqMap = {};
-      for (const [id] of mine) {
-        const reqs = await backend.get_pending_requests(id);
-        reqMap[id] = reqs;
+        setDataset(ds);
+        const reqs = await getPendingRequests(Number(id));
+        setPendingRequests(reqs);
+
+      } catch (err) {
+        console.error("Error loading requests:", err);
+        setStatusMsg("❌ Failed to load requests.");
       }
-
-      setDatasets(mine);
-      setRequestsMap(reqMap);
     };
 
     loadRequests();
-  }, [iiPrincipal, loading]);
+  }, [id, iiPrincipal, loading]);
 
-  const approveBuyer = async (datasetId, buyer) => {
-    const backend = getBackendActor();
+  const handleApprove = async (buyer) => {
     try {
-      const res = await backend.approve_buyer(datasetId, Principal.fromText(buyer));
+      const res = await approveBuyer(dataset.id, buyer);
       setStatusMsg(`✅ ${res}`);
-      // Remove from state immediately
-      setRequestsMap((prev) => ({
-        ...prev,
-        [datasetId]: prev[datasetId].filter(p => p.toString() !== buyer)
-      }));
+
+      // Optimistically update UI
+      setPendingRequests((prev) => prev.filter((p) => p !== buyer));
     } catch (e) {
-      console.error("Error approving buyer:", e);
+      console.error("Approval error:", e);
       setStatusMsg("❌ Approval failed.");
     }
   };
+  
+  // Helper to shorten the principal for display
+  const shortenPrincipal = (principal) => {
+    return `${principal.slice(0, 4)}...${principal.slice(-4)}`;
+  };
 
-  if (!iiPrincipal) return <p>Please login to view requests.</p>;
+  if (loading || !dataset) return <p className="loading">⏳ Loading...</p>;
+  if (!iiPrincipal) return <p>🔒 Please log in to view access requests.</p>;
 
   return (
     <div className="requests-container">
-      <h1>📝 Pending Access Requests</h1>
+      <h2>📥 Pending Requests for: {dataset.title}</h2>
       {statusMsg && <p className="status-msg">{statusMsg}</p>}
-
-      {datasets.map(([id, title]) => (
-        <div key={id} className="dataset-block">
-          <h3>{title}</h3>
-          {requestsMap[id]?.length ? (
-            <ul>
-              {requestsMap[id].map((p, idx) => (
-                <li key={idx}>
-                  <code>{p.toString()}</code>
-                  <button onClick={() => approveBuyer(id, p.toString())}>
-                    ✅ Approve
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No pending requests.</p>
-          )}
-        </div>
-      ))}
+      
+      {pendingRequests.length ? (
+        <ul>
+          {pendingRequests.map((p, idx) => (
+            <li key={idx}>
+              <code>{shortenPrincipal(p)}</code>
+              <button onClick={() => handleApprove(p)}>
+                ✅ Approve
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="no-requests">No pending requests.</p>
+      )}
     </div>
   );
 }

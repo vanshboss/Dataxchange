@@ -1,10 +1,11 @@
 service : {
-  upload_dataset: (text, text, nat64, text) -> (nat64);
-  get_all_datasets: () -> (vec record { nat64; text; nat64; text; principal });
+  upload_dataset: (text, text,    vec nat8,   nat64, text) -> (variant { Ok: nat64; Err: text });
+  get_all_datasets: () -> (vec record { nat64; text;text; nat64; text; principal });
   request_access: (nat64) -> (text);
   get_pending_requests: (nat64) -> (vec principal);
   approve_buyer: (nat64, principal) -> (text);
-  view_dataset: (nat64) -> (text);
+  view_dataset: (nat64) -> (variant { Ok: vec nat8; Err: text });
+    greet: (text) -> (text);
 };
 
 

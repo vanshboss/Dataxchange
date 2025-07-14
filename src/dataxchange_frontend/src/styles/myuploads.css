@@ -1,58 +1,85 @@
-/* src/styles/myuploads.css */
 .myuploads-container {
   max-width: 900px;
   margin: 40px auto;
-  padding: 20px;
+  padding: 40px 20px;
   font-family: "Segoe UI", sans-serif;
+  box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
 }
 
 .myuploads-list {
   display: grid;
   gap: 20px;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 .myupload-card {
   border: 1px solid #ddd;
-  background: #fff;
+  background: #ffffff;
   border-radius: 8px;
   padding: 20px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.myupload-card:hover,
+.myupload-card:focus-within {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+  outline: none;
 }
 
 .myupload-card h3 {
   font-size: 1.1rem;
   margin-bottom: 10px;
+  color: #1e293b;
+  user-select: text;
 }
 
 .myupload-card p {
   margin: 4px 0;
   font-size: 0.9rem;
+  color: #4b5563;
+  user-select: text;
 }
 
 .myupload-card button {
-  margin-top: 10px;
+  margin-top: 12px;
   background: #2200e0a6;
   border: none;
   color: white;
-  padding: 8px 12px;
-  font-weight: 500;
-  border-radius: 5px;
+  padding: 10px 14px;
+  font-weight: 600;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+  align-self: flex-start;
+  user-select: none;
+  font-size: 0.95rem;
 }
 
-.myupload-card button:hover {
+.myupload-card button:hover,
+.myupload-card button:focus-visible {
   background: #00c8b0;
-}
-.myuploads-container {
-  padding: 40px;
-  font-family: "Segoe UI", sans-serif;
+  outline: none;
+  box-shadow: 0 0 8px #00c8b0aa;
 }
 
 .upload-list {
   list-style: none;
   padding: 0;
+  margin: 0;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
 }
 
 .upload-item {
@@ -64,17 +91,132 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.upload-item:hover,
+.upload-item:focus-within {
+  background-color: #e0e7ff;
+  border-color: #3b82f6;
+  outline: none;
 }
 
 .manage-link {
   background-color: #9343f5;
   color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
+  padding: 8px 18px;
+  border-radius: 8px;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 0.95rem;
+  user-select: none;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.manage-link:hover {
+.manage-link:hover,
+.manage-link:focus-visible {
   background-color: #8d6ada;
+  outline: none;
+  box-shadow: 0 0 8px #8d6adaaa;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .myuploads-list {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+
+  .myupload-card button {
+    font-size: 0.9rem;
+    padding: 9px 12px;
+  }
+
+  .manage-link {
+    padding: 7px 14px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .myuploads-container {
+    padding: 30px 12px;
+  }
+
+  .myuploads-list {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .upload-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .manage-link {
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 1rem;
+  }
+}
+
+/* Dark mode */
+body.dark-mode {
+  background-color: #111827;
+  color: #d1d5db;
+}
+
+body.dark-mode .myupload-card {
+  background-color: #1f2937;
+  border-color: #374151;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+  color: #d1d5db;
+}
+
+body.dark-mode .myupload-card h3 {
+  color: #e0e7ff;
+}
+
+body.dark-mode .myupload-card p {
+  color: #94a3b8;
+}
+
+body.dark-mode .myupload-card button {
+  background: #5b21b6cc;
+}
+
+body.dark-mode .myupload-card button:hover,
+body.dark-mode .myupload-card button:focus-visible {
+  background: #22d3ee;
+  box-shadow: 0 0 8px #22d3eecc;
+  color: #111827;
+}
+
+body.dark-mode .upload-list,
+body.dark-mode .upload-item {
+  background-color: #1f2937;
+  border-color: #374151;
+  color: #cbd5e1;
+}
+
+body.dark-mode .upload-item:hover,
+body.dark-mode .upload-item:focus-within {
+  background-color: #2563eb;
+  border-color: #1e40af;
+  color: #dbeafe;
+}
+
+body.dark-mode .manage-link {
+  background-color: #7c3aed;
+  color: #e0e7ff;
+}
+body.dark-mode .myuploads-container{
+  background-color: #1e293b;
+}
+body.dark-mode .manage-link:hover,
+body.dark-mode .manage-link:focus-visible {
+  background-color: #a78bfa;
+  color: #1e293b;
+  box-shadow: 0 0 10px #a78bfacc;
 }

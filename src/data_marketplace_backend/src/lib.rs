@@ -9,7 +9,8 @@ use serde::Deserialize;
 struct Dataset {
     id: u64,
     title: String,
-    content: String,
+    category: String,
+    file: Vec<u8>,
     price: u64,
     owner: Principal,
     wallet_address: String,
@@ -23,16 +24,20 @@ thread_local! {
 }
 
 #[query]
-fn get_all_datasets() -> Vec<(u64, String, u64, String, Principal)> {
+fn get_all_datasets() -> Vec<(u64, String, String,  u64, String, Principal)> {
     DATASETS.with(|d| {
         d.borrow().iter().map(|ds| {
-            (ds.id, ds.title.clone(), ds.price, ds.wallet_address.clone(), ds.owner)
+            (ds.id, ds.title.clone(),ds.category.clone(), ds.price, ds.wallet_address.clone(), ds.owner)
         }).collect()
     })
 }
 
 #[update]
-fn upload_dataset(title: String, content: String, price: u64, wallet: String) -> u64 {
+fn upload_dataset(title: String, category: String,file: Vec<u8>, price: u64, wallet: String) ->Result<u64, String>  {
+        if file.len() > 4 * 1024 * 1024 {
+        return Err("File too large. Max 4MB allowed.".to_string());
+    }
+
     let id = NEXT_ID.with(|id| {
         let mut id_mut = id.borrow_mut();
         let current = *id_mut;
@@ -43,7 +48,8 @@ fn upload_dataset(title: String, content: String, price: u64, wallet: String) ->
     let dataset = Dataset {
         id,
         title,
-        content,
+        category,
+        file,
         price,
         owner: caller(),
         wallet_address: wallet,
@@ -55,7 +61,7 @@ fn upload_dataset(title: String, content: String, price: u64, wallet: String) ->
         d.borrow_mut().push(dataset);
     });
 
-    id
+Ok(id)
 }
 
 #[update]
@@ -107,18 +113,18 @@ fn approve_buyer(dataset_id: u64, buyer: Principal) -> String {
 }
 
 #[query]
-fn view_dataset(dataset_id: u64) -> String {
+fn view_dataset(dataset_id: u64) ->Result<Vec<u8>, String>  {
     let user = caller();
     DATASETS.with(|d| {
         let datasets = d.borrow();
         if let Some(ds) = datasets.iter().find(|ds| ds.id == dataset_id) {
             if ds.owner == user || ds.approved_buyers.contains(&user) {
-                return ds.content.clone();
+                return Ok(ds.file.clone());
             } else {
-                return "Access denied. Request access and wait for approval.".to_string();
+                return Err("Access denied. Request access and wait for approval.".to_string());
             }
         }
-        "Dataset not found.".to_string()
+        Err("Dataset not found.".to_string())
     })
 }
 // src/data_marketplace_backend/src/lib.rs

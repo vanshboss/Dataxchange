@@ -1,3 +1,4 @@
+// src/pages/MyUploadsPage.jsx
 import React, { useEffect, useState, useContext } from "react";
 import { getBackendActor } from "../services/backend.js";
 import { UserContext } from "../context/UserContext";
@@ -8,68 +9,59 @@ export default function MyUploadsPage() {
   const { iiPrincipal, loading } = useContext(UserContext);
   const [uploads, setUploads] = useState([]);
   const [error, setError] = useState(null);
-    
-
-
 
   useEffect(() => {
-    if (!iiPrincipal || loading) return;
+    if (loading || !iiPrincipal) return;
 
-    const fetch = async () => {
+    (async () => {
       try {
-        const backend = getBackendActor();
-        const all = await backend.get_all_datasets();
+        const actor = await getBackendActor(true);
+        const all = await actor.get_all_datasets();
+console.group("🔍 MyUploads DEBUG");
+      console.log("• iiPrincipal (current user):", iiPrincipal);
+        // Filter by owner principal string
+        all.forEach(([id, title, category, price, wallet, owner], i) => {
+        console.log(`  [${i}] ds.id=${id} owner=${owner.toText()}`);
+      });
+      console.groupEnd();
 
-        // Debug: show what's returned
-        // console.log("📦 All datasets:", all);
-        // console.log("👤 Current Principal:", iiPrincipal);
+      const mine = all.filter(
+        ([, , , , , owner]) => owner.toText?.() === iiPrincipal
+      );
 
-        // Convert iiPrincipal to string if it's not already
-        const currentPrincipalStr = iiPrincipal.toString();
-
-        const mine = all.filter(ds => {
-          const ownerPrincipal = ds[4]; // Principal object
-          const ownerStr = ownerPrincipal.toText?.() || ownerPrincipal.toString?.() || String(ownerPrincipal);
-          return ownerStr === currentPrincipalStr;
-        });
-
-        // console.log("✅ Filtered My Uploads:", mine);
-
-        const formatted = mine.map(ds => ({
-          id: Number(ds[0]),
-          title: ds[1],
-          price: Number(ds[2]),
-          wallet: ds[3],
-          owner: ds[4].toText?.() || ds[4]?.toString?.(),
-        }));
-
-        setUploads(formatted);
+        setUploads(
+          mine.map(([id, title, category, price, wallet, owner]) => ({
+          id: Number(id),
+          title,
+          category,
+          price: Number(price),
+          wallet,
+          owner: owner.toText?.() || owner.toString?.() || String(owner),
+          }))
+        );
       } catch (err) {
-        // console.error("Error loading uploads:", err);
-        setError("Failed to fetch your datasets.");
+        console.error(err);
+        setError("Failed to load your uploads.");
       }
-    };
-
-    fetch();
+    })();
   }, [iiPrincipal, loading]);
 
-  if (loading) return <p className="loading">⏳ Loading...</p>;
-  if (!iiPrincipal) return <p>Please login to view your uploads.</p>;
+  if (loading) return <p className="loading">⏳ Loading…</p>;
+  if (!iiPrincipal) return <p>Please log in to view your uploads.</p>;
 
   return (
     <div className="myuploads-container">
-    
-      <h1>📦 My Uploaded Datasets</h1>
+      <h3>📦 My Uploaded Datasets</h3>
       {error && <p className="error">{error}</p>}
-      {!uploads.length && !error && <p>No datasets uploaded yet.</p>}
+      {!uploads.length && !error && <p>No uploads yet.</p>}
 
       <ul className="upload-list">
         {uploads.map((ds) => (
           <li key={ds.id} className="upload-item">
             <div>
-              <strong>{ds.title}</strong> — {ds.price} ICP
+              <strong>{ds.title}</strong> ({ds.category}) — {ds.price} ICP
             </div>
-            <Link className="manage-link" to={`/admin/requests/${ds.id}`}>
+            <Link to={`/admin/requests/${ds.id}`} className="manage-link">
               Manage Access
             </Link>
           </li>

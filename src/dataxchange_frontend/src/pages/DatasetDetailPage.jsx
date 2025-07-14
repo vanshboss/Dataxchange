@@ -1,81 +1,118 @@
-// src/pages/DatasetDetailPage.jsx
 import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
-import { getDatasetById, requestAccess, viewDataset } from "../services/api";
+import { getBackendActor } from "../services/backend";
 import "../styles/detail.css";
-
+import { shortenPrincipal } from "../utils/principal";
+import { hasAccess } from "../services/api";
 export default function DatasetDetailPage() {
   const { id } = useParams();
-  const { iiPrincipal } = useContext(UserContext);
-
-  const [dataset, setDataset] = useState(null);
-  const [access, setAccess] = useState(false);
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
-const handleBack = () => {
-  navigate(-1); 
-};
-
+  const { iiPrincipal, loading } = useContext(UserContext);
+const [hasDownloadAccess, setHasDownloadAccess] = useState(false);
+  const [dataset, setDataset] = useState(null);
+  const [message, setMessage] = useState("");
+  const [loadingDataset, setLoadingDataset] = useState(true);
+ 
+  useEffect(() => {
+    const checkAccess = async () => {
+      if (iiPrincipal && dataset) {
+        const access = await hasAccess(dataset.id);
+        setHasDownloadAccess(access);
+      }
+    };
+    checkAccess();
+  }, [iiPrincipal, dataset]);
 
   useEffect(() => {
-  const datasetId = parseInt(id);
-  console.log("Fetching dataset with ID:", datasetId);
+    if (!id) return;
 
-  getDatasetById(datasetId)
-    .then((res) => {
-      console.log("Dataset fetched:", res);
-      setDataset(res);
-    })
-    .catch((err) => {
-      console.error("Error fetching dataset:", err);
-    })
-    .finally(() => {
-      setLoading(false);
-    });
-}, [id]);
+    (async () => {
+      try {
+        const actor = await getBackendActor();
+        const all = await actor.get_all_datasets();
+        const match = all.find((d) => Number(d[0]) === Number(id));
 
+        if (match) {
+          setDataset({
+            id: Number(match[0]),
+            title: match[1],
+            category: match[2],
+            price: Number(match[3]),
+            wallet: match[4],
+            owner: match[5].toText(),
+          });
+        }
+
+        setLoadingDataset(false);
+      } catch (err) {
+        console.error("Failed to fetch dataset:", err);
+        setMessage("❌ Could not load dataset.");
+        setLoadingDataset(false);
+      }
+    })();
+  }, [id]);
+
+  const handleBack = () => navigate(-1);
 
   const handleRequest = async () => {
-    const msg = await requestAccess(parseInt(id));
-    setMessage(msg);
-  };
-
-  const handleDownload = async () => {
-    const content = await viewDataset(parseInt(id));
-    if (!content.startsWith("Access denied")) {
-      const blob = new Blob([content], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${dataset.title}.txt`;
-      a.click();
-      URL.revokeObjectURL(url);
-    } else {
-      alert("You are not approved to download this dataset.");
+    try {
+      const actor = await getBackendActor();
+      const res = await actor.request_access(BigInt(id));
+      setMessage(res);
+    } catch (err) {
+      setMessage("❌ Failed to request access.");
+      console.error(err);
     }
   };
 
-  if (loading) return <p>Loading dataset...</p>;
-  if (!dataset) return <p>Dataset not found.</p>;
+  const handleDownload = async () => {
+    try {
+      const actor = await getBackendActor();
+      const res = await actor.view_dataset(BigInt(id));
+
+      if ("Ok" in res) {
+        const blob = new Blob([new Uint8Array(res.Ok)], { type: "application/octet-stream" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${dataset.title}.bin`;
+        a.click();
+        URL.revokeObjectURL(url);
+      } else {
+        alert(res.Err);
+      }
+    } catch (err) {
+      alert("Download failed.");
+      console.error(err);
+    }
+  };
+
+  if (loading || loadingDataset) return <p>⏳ Loading dataset...</p>;
+  if (!dataset) return <p>❌ Dataset not found.</p>;
+
+  const isOwner = iiPrincipal === dataset.owner;
 
   return (
     <div className="detail-container">
       <button className="back-button" onClick={handleBack}>← Back</button>
-
       <h2>{dataset.title}</h2>
+      <p><strong>Category:</strong> {dataset.category}</p>
       <p><strong>Price:</strong> {dataset.price} ICP</p>
-      <p><strong>Owner:</strong> {dataset.owner}</p>
-
+    <p><strong>Owner:</strong> {shortenPrincipal(dataset.owner)}</p>
+ 
       <div className="detail-actions">
-        {iiPrincipal && (
-          <>
-            <button className="btn-primary" onClick={handleRequest}>Request Access</button>
-            <button className="btn-secondary" onClick={handleDownload}>Download</button>
-          </>
+        {!loading && iiPrincipal && !isOwner && (
+          <button onClick={handleRequest} className="btn-primary">
+            Request Access
+          </button>
         )}
+        {isOwner && <p className="owner-label">You are the owner.</p>}
+      {hasDownloadAccess && !isOwner && (
+        <button onClick={handleDownload} className="btn-secondary">
+          Download
+        </button>
+      )}
         {message && <p className="detail-message">{message}</p>}
       </div>
     </div>
