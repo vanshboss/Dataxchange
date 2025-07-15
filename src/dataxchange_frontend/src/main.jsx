@@ -1,10 +1,9 @@
-import React, { useContext } from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter as Router } from 'react-router-dom';
-import App from './App.jsx';
+import React, { useContext } from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter as Router } from "react-router-dom";
+import App from "./App.jsx";
 import { UserProvider, UserContext } from "./context/UserContext";
-import './index.scss'; 
-
+import "./index.scss";
 
 function AppContent() {
   const { loading } = useContext(UserContext);
@@ -15,16 +14,13 @@ function AppContent() {
 
   return <App />;
 }
-ReactDOM.createRoot(document.getElementById('root')).render(
 
-<UserProvider>
-
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Router>
-      <AppContent />
+      <UserProvider>
+        <AppContent />
+      </UserProvider>
     </Router>
   </React.StrictMode>
-</UserProvider>
-
-  
 );

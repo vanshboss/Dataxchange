@@ -14,5 +14,9 @@
   "type": "module",
   "workspaces": [
     "src/dataxchange_frontend"
-  ]
+  ],
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "vite": "^7.0.4"
+  }
 }

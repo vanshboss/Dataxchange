@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getBackendActor } from "../services/backend";
 import { UserContext } from "../context/UserContext";
 import "../styles/admin.css";
+import { toast } from "react-toastify";
 
 export default function AdminApprovalPage() {
   const { id } = useParams(); // dataset ID from URL
@@ -19,7 +20,7 @@ const handleBack = () => {
 
   const fetchRequests = async () => {
     try {
-      const backend = getBackendActor();
+      const backend = await getBackendActor();
       const reqs = await backend.get_pending_requests(BigInt(id));
       setPending(reqs);
     } catch (err) {
@@ -30,14 +31,16 @@ const handleBack = () => {
 
   const handleApprove = async (buyer) => {
     try {
-      const backend = getBackendActor();
+      const backend = await getBackendActor();
       const msg = await backend.approve_buyer(BigInt(id), buyer);
-      setMessage(`✅ ${buyer.toText()} approved`);
+      setMessage(`✅ ${msg}`);
       // Refresh list
+       toast.success(`✅ Approved buyer: ${msg}`);
       fetchRequests();
     } catch (err) {
       console.error("Approval failed:", err);
       setError("Failed to approve buyer.");
+      toast.error("❌ Failed to approve buyer.");
     }
   };
 
@@ -51,7 +54,7 @@ const handleBack = () => {
   return (
     <div className="admin-approval">
         <button className="back-button" onClick={handleBack}>← Back</button>
-      <h1>🔐 Approve Buyers for Dataset #{id}</h1>
+      <h3>🔐 Approve Buyers for Dataset #{id}</h3>
 
       {error && <p className="error">{error}</p>}
       {message && <p className="success">{message}</p>}

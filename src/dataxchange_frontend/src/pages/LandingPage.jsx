@@ -3,6 +3,7 @@ import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import '../styles/landing.css';
+import AnimatedButton from '../components/AnimatedButton';
 
 export default function LandingPage() {
   const { iiPrincipal, loginII } = useContext(UserContext);
@@ -28,9 +29,11 @@ export default function LandingPage() {
           Secure, decentralized data marketplace on Internet Computer Protocol (ICP).
         </p>
         <p className="hero-subtext">Connect. Share. Profit. With zero intermediaries.</p>
-      <button className="primary-cta" onClick={() => handleProtectedNavigate("/explore")}>
+      {/* <button className="primary-cta" onClick={() => handleProtectedNavigate("/explore")}>
           Explore Datasets
-        </button>
+        </button> */}
+        <AnimatedButton className="primary-cta" onClick={() => handleProtectedNavigate("/explore")}>Explore</AnimatedButton>
+
       </section>
 
   

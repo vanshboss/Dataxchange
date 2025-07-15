@@ -1,10 +1,33 @@
-service : {
-  upload_dataset: (text, text, nat64, text) -> (nat64);
-  get_all_datasets: () -> (vec record { nat64; text; nat64; text; principal });
-  request_access: (nat64) -> (text);
-  get_pending_requests: (nat64) -> (vec principal);
-  approve_buyer: (nat64, principal) -> (text);
-  view_dataset: (nat64) -> (text);
+type MyRequest = record {
+    dataset_id: nat64;
+    title: text;
+    status: RequestStatus;
 };
+type RequestStatus = variant { Pending; Approved };
 
-
+service : {
+    upload_dataset: (
+        text, // title
+        text, // category
+        vec nat8, // file
+        nat64, // price
+        text // wallet
+    ) -> (variant { Ok: nat64; Err: text });
+    get_all_datasets: () -> (
+        vec record {
+            nat64; // id
+            text; // title
+            text; // category
+            nat64; // price
+            text; // wallet
+            principal; // owner
+        }
+    ) query;
+    request_access: (nat64) -> (text);
+    get_pending_requests: (nat64) -> (vec principal) query;
+    approve_buyer: (nat64, principal) -> (text);
+    view_dataset: (nat64) -> (variant { Ok: vec nat8; Err: text }) query;
+    greet: (text) -> (text) query;
+    has_access: (nat64) -> (bool) query; // New function
+    get_my_requests: () -> (vec MyRequest) query; // New function
+};

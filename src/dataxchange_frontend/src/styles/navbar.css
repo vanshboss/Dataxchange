@@ -1,117 +1,367 @@
+/* === Modern Responsive Navbar === */
+
+/* Base Navbar Styles */
 .navbar {
-  background: #0f172a;
-  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  background: rgba(15, 23, 42, 0.85); /* translucent, for glass effect */
+  backdrop-filter: saturate(180%) blur(12px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 30px;
-  font-family: "Segoe UI", sans-serif;
-  position: sticky;
-  top: 0;
-  z-index: 999;
+  padding: 16px 36px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #e0e6f8;
+  transition: background-color 0.35s ease, box-shadow 0.35s ease, color 0.35s ease;
 }
 
+/* Logo Container */
 .navbar__logo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 1.2rem;
-  font-weight: bold;
+  gap: 14px;
+  font-size: 1.4rem;
+  font-weight: 900;
   cursor: pointer;
-  color: white;
+  user-select: none;
+  color: #d0d7ff;
+  letter-spacing: 0.02em;
+  transition: color 0.3s ease;
+  flex-shrink: 0;
+}
+.navbar__logo:hover,
+.navbar__logo:focus-visible {
+  color: #a3bffa;
+  outline: none;
 }
 
+/* Logo Circular Icon */
 .navbar__logo-circle {
-  background-color: whitesmoke;
+  background: linear-gradient(135deg, #7f76bbe3 0%, #2cf05b 100%);
   border-radius: 50%;
-  padding: 6px;
+  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 38px;
-  width: 38px;
-  transition: box-shadow 0.3s ease;
+  height: 44px;
+  width: 44px;
+  box-shadow:
+    0 8px 20px rgba(140, 105, 255, 0.45),
+    inset 0 0 10px rgba(182, 163, 255, 0.6);
+  transition:
+    box-shadow 0.4s ease,
+    transform 0.3s ease;
 }
-.navbar__logo-circle:hover {
-  box-shadow: 0 0 12px rgba(151, 142, 246, 0.8);
+.navbar__logo-circle:hover,
+.navbar__logo-circle:focus-visible {
+  box-shadow:
+    0 0 25px 8px rgba(138, 124, 255, 0.7),
+    inset 0 0 16px rgba(188, 177, 255, 0.85);
+  transform: scale(1.1);
+  outline: none;
 }
+
+/* Logo Image */
 .navbar__img {
-  height: 30px;
-  width: 30px;
+  height: 32px;
+  width: 32px;
+  filter: drop-shadow(0 0 5px rgba(138, 124, 255, 0.6));
+  user-select: none;
+  pointer-events: none;
 }
 
-
+/* Navigation Links Container */
 .navbar__links {
   display: flex;
   list-style: none;
-  gap: 24px;
+  gap: 32px;
   margin: 0;
   padding: 0;
+  align-items: center;
+  flex-wrap: nowrap;
+  flex: 1 1 auto; /* allow to grow/shrink */
+  justify-content: center;
 }
 
+/* Individual Nav Links */
 .navbar__links li a {
   text-decoration: none;
-  color: white;
-  font-size: 1rem;
-  transition: color 0.2s;
-}
-
-.navbar__links li a:hover {
-  color: #00e0c6;
-}
-
-.navbar__actions .navbar__btn {
-  background: #00e0c6;
-  border: none;
-  padding: 8px 16px;
-  color: #0f172a;
-  font-weight: bold;
+  color: #d0d7ff;
+  font-size: 1.05rem;
+  font-weight: 600;
+  padding: 6px 12px;
   border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  user-select: none;
+  display: inline-block;
+  white-space: nowrap;
+}
+.navbar__links li a:hover,
+.navbar__links li a:focus-visible {
+  color: #a3bffa;
+  background-color: rgba(163, 191, 250, 0.15);
+  outline-offset: 3px;
+  outline: 2.5px solid #a3bffa;
+  box-shadow: 0 0 8px rgba(163, 191, 250, 0.45);
 }
 
-.navbar__actions .navbar__btn:hover {
-  background: #00c8b0;
+/* Navbar Actions (e.g., buttons) */
+.navbar__actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-shrink: 0;
 }
+
+/* Buttons in Navbar */
+.navbar__actions .navbar__btn {
+  background: linear-gradient(135deg, #00e0c6 0%, #007a75 100%);
+  border: none;
+  padding: 10px 22px;
+  color: #0f172a;
+  font-weight: 700;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(0, 224, 198, 0.75);
+  transition: background 0.35s ease, box-shadow 0.35s ease, transform 0.3s ease;
+  user-select: none;
+}
+.navbar__actions .navbar__btn:hover,
+.navbar__actions .navbar__btn:focus-visible {
+  background: linear-gradient(135deg, #00c8b0 0%, #02615e 100%);
+  box-shadow: 0 8px 25px rgba(0, 200, 176, 0.9);
+  transform: translateY(-3px) scale(1.05);
+  outline-offset: 3px;
+  outline: 2.5px solid #00e0c6;
+}
+
+/* Profile Dropdown Container */
 .profile-dropdown {
   position: relative;
   display: inline-block;
+  user-select: none;
 }
 
+/* Dropdown Menu */
 .dropdown-menu {
   position: absolute;
-  top: 38px;
+  top: 46px;
   right: 0;
-  background: white;
-  color: #333;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-  padding: 10px;
-  z-index: 1000;
-  min-width: 160px;
+  background: rgba(255 255 255 / 0.95);
+  color: #222;
+  border-radius: 12px;
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.18),
+    0 3px 8px rgba(0, 0, 0, 0.08);
+  padding: 12px 16px;
+  z-index: 10000;
+  min-width: 180px;
+  font-size: 0.95rem;
+  backdrop-filter: saturate(180%) blur(20px);
+  border: 1px solid rgba(170, 175, 255, 0.25);
 }
 
+/* Dropdown Buttons */
 .dropdown-menu button {
   display: block;
   width: 100%;
-  padding: 8px 12px;
+  padding: 10px 14px;
   background: none;
   border: none;
   text-align: left;
-  font-size: 0.95rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #444;
   cursor: pointer;
-  transition: background 0.2s ease;
+  border-radius: 8px;
+  transition: background 0.25s ease, color 0.25s ease;
+  user-select: none;
+}
+.dropdown-menu button:hover,
+.dropdown-menu button:focus-visible {
+  background-color: #6c63ff22; /* subtle purple highlight */
+  color: #6c63ff;
+  outline-offset: 3px;
+  outline: 2.5px solid #6c63ff;
+  box-shadow: 0 0 8px rgba(108, 99, 255, 0.7);
 }
 
-.dropdown-menu button:hover {
-  background-color: #f1f1f1;
-}
-
+/* Logout button distinct style */
 .logout-btn {
-  color: red;
+  color: #e74c3c;
+  font-weight: 700;
+}
+.logout-btn:hover,
+.logout-btn:focus-visible {
+  color: #c0392b;
+  text-decoration: underline;
+  outline-offset: 3px;
+  outline: 2.5px solid #e74c3c;
+  box-shadow: 0 0 6px rgba(231, 76, 60, 0.9);
 }
 
+/* ================================
+   Responsive Breakpoints
+   ================================ */
 
+/* Medium devices (tablets, 900px and below) */
+@media (max-width: 900px) {
+  .navbar {
+    padding: 14px 24px;
+  }
+  .navbar__links {
+    gap: 20px;
+    justify-content: center;
+  }
+}
 
+/* Small devices (phones, 600px and below) */
+@media (max-width: 600px) {
+  .navbar {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 16px 20px;
+  }
+  
+  .navbar__logo {
+    font-size: 1.15rem;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  
+  .navbar__links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+    margin-bottom: 12px;
+    order: 3;
+  }
+  
+  .navbar__actions {
+    width: 100%;
+    justify-content: center;
+    order: 2;
+  }
+  
+  /* Make buttons full width on small screen */
+  .navbar__actions .navbar__btn {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+/* Extra small devices (very small phones, 400px and below) */
+@media (max-width: 400px) {
+  .navbar__links li a {
+    font-size: 0.95rem;
+    padding: 6px 8px;
+  }
+}
+.navbar__links .active {
+  /* font-weight: bold;
+  border-bottom: 2px solid #0044cc;
+  color: #0044cc; */
+
+    color: #a6b5ff;
+  /* background-color: rgba(166, 181, 255, 0.25); */
+  outline-color: #a6b5ff;
+  box-shadow: 0 0 10px rgba(166, 181, 255, 0.7);
+}
+/* ================================
+   Dark Mode Support
+   ================================ */
+
+body.dark-mode .navbar {
+  background: rgba(20, 20, 30, 0.85);
+  color: #d5d8e0;
+  box-shadow: 0 4px 30px rgba(60, 60, 90, 0.9);
+}
+
+body.dark-mode .navbar__logo {
+  color: #b0b8e0;
+}
+body.dark-mode .navbar__logo:hover,
+body.dark-mode .navbar__logo:focus-visible {
+  color: #99aaff;
+}
+
+body.dark-mode .navbar__logo-circle {
+  background: linear-gradient(135deg, #7f76bbe3 0%, #2cf05b 100%);
+  box-shadow:
+    0 8px 20px rgba(150, 140, 255, 0.7),
+    inset 0 0 12px rgba(200, 195, 255, 0.8);
+}
+body.dark-mode .navbar__logo-circle:hover,
+body.dark-mode .navbar__logo-circle:focus-visible {
+  box-shadow:
+    0 0 25px 10px rgba(150, 140, 255, 0.9),
+    inset 0 0 18px rgba(225, 220, 255, 1);
+  transform: scale(1.1);
+}
+
+body.dark-mode .navbar__links li a {
+  color: #c0c7e8;
+}
+body.dark-mode .navbar__links li a:hover,
+body.dark-mode .navbar__links li a:focus-visible {
+  color: #a6b5ff;
+  background-color: rgba(166, 181, 255, 0.25);
+  outline-color: #a6b5ff;
+  box-shadow: 0 0 10px rgba(166, 181, 255, 0.7);
+}
+
+body.dark-mode .navbar__actions .navbar__btn {
+  background: linear-gradient(135deg, #00b5a5 0%, #005850 100%);
+  color: #e0f7f4;
+  box-shadow: 0 6px 16px rgba(0, 181, 165, 0.95);
+}
+body.dark-mode .navbar__actions .navbar__btn:hover,
+body.dark-mode .navbar__actions .navbar__btn:focus-visible {
+  background: linear-gradient(135deg, #00a399 0%, #004f4a 100%);
+  box-shadow: 0 7px 22px rgba(0, 163, 153, 1);
+  outline-color: #00b5a5;
+}
+
+body.dark-mode .dropdown-menu {
+  background: rgba(30, 30, 45, 0.9);
+  color: #ccc;
+  border: 1px solid rgba(115, 115, 155, 0.6);
+  box-shadow:
+    0 8px 20px rgba(50, 50, 100, 0.65),
+    0 3px 12px rgba(50, 50, 100, 0.3);
+  backdrop-filter: saturate(180%) blur(25px);
+}
+body.dark-mode .dropdown-menu button {
+  color: #bbb;
+}
+body.dark-mode .dropdown-menu button:hover,
+body.dark-mode .dropdown-menu button:focus-visible {
+  background-color: rgba(108, 99, 255, 0.3);
+  color: #b0afff;
+  outline-color: #b0afff;
+  box-shadow: 0 0 12px rgba(108, 99, 255, 0.8);
+}
+body.dark-mode .logout-btn {
+  color: #ff6f67;
+}
+body.dark-mode .logout-btn:hover,
+body.dark-mode .logout-btn:focus-visible {
+  color: #ff4b3a;
+  outline-color: #ff6f67;
+  box-shadow: 0 0 8px rgba(255, 111, 103, 1);
+}
+
+/* ================================
+   Accessibility Focus Outline
+   ================================ */
+.navbar__links li a:focus-visible,
+.navbar__btn:focus-visible,
+.navbar__logo:focus-visible,
+.navbar__logo-circle:focus-visible,
+.dropdown-menu button:focus-visible {
+  outline-offset: 4px;
+  border-radius: 6px;
+}

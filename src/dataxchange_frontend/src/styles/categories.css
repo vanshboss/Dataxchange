@@ -1,0 +1,147 @@
+/* categories.css */
+
+body.dark .categories-container {
+  background-color: #1a1a1a;
+  color: #f0f0f0;
+}
+
+body.light .categories-container {
+  background-color: #ffffff;
+  color: #111111;
+}
+
+.categories-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: auto;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.categories-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 640px) {
+  .categories-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.back-btn {
+  background: transparent;
+  border: 2px solid #87b1e4;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #8db0db;
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  background-color: currentColor;
+  color: transparent;
+}
+
+.categories-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  animation: fadeIn 0.8s ease;
+  color: #3b82f6;
+  
+}
+
+.category-dropdown {
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border: 2px solid currentColor;
+  border-radius: 8px;
+  background: none;
+  color: inherit;
+  margin-bottom: 2rem;
+  cursor: pointer;
+  border-color: #87b1e4;
+  transition: border-color 0.3s ease;
+}
+
+.category-dropdown:hover {
+  border-color: #6c63ff;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  animation: slideIn 0.5s ease-in-out;
+}
+
+.no-datasets {
+  font-size: 1.2rem;
+  text-align: center;
+  margin-top: 2rem;
+  opacity: 0.7;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive typography */
+@media (max-width: 480px) {
+  .categories-title {
+    font-size: 1.4rem;
+    
+  }
+
+  .category-dropdown {
+    width: 100%;
+  }
+}
+
+/* Light/Dark dataset card override example */
+body.dark .dataset-card {
+  background-color: #2a2a2a;
+  color: #fff;
+}
+
+body.light .dataset-card {
+  background-color: #f9f9f9;
+  color: #000;
+}
+
+.dataset-card {
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.dataset-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
